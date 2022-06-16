@@ -1,0 +1,28 @@
+node{
+    def mavenHome = tool name:"maven3.8.5"
+    
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([pollSCM('* * * * *')])])
+
+stage("CloningCode"){
+git branch: 'development', url: 'https://github.com/Yaswanth345/maven-web-application.git'
+}
+stage("Buid"){
+sh "${mavenHome}/bin/mvn clean package"
+}
+
+stage("Nexus"){
+sh "${mavenHome}/bin/mvn deploy"
+}
+
+stage("DeployToTomcatSserver"){
+    sshagent(['f5ae42d5-e780-4ef2-9697-7a715742cc2a']) {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@15.207.51.253:/opt/apache-tomcat-9.0.63/webapps/"
+}
+}
+stage("Email"){
+    emailext body: '''Build is Deployed Successfully
+
+Thanks & Regards
+Yaswanth''', subject: 'Build is Success', to: 'yaswanthgopi918@gmail.com'
+}
+}
