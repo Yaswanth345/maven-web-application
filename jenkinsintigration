@@ -7,7 +7,7 @@ stage("CloningCode"){
 git branch: 'development', url: 'https://github.com/Yaswanth345/maven-web-application.git'
 }
 stage("Buid"){
-sh "${mavenHome}/bin/mvn clean package"
+sh "/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven3.8.5/bin/mvn clean package"
 }
 
 stage("Nexus"){
