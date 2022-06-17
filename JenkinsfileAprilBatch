@@ -1,4 +1,4 @@
-node{
+node('slave'){
     def mavenHome = tool name:"maven3.8.5"
 	echo "Job name is: ${env.JOB_NAME}" 
 echo "Node name is: ${env.NODE_NAME}" 
@@ -10,7 +10,7 @@ git branch: 'development', url: 'https://github.com/Yaswanth345/maven-web-applic
 stage("Buid"){
 sh "${mavenHome}/bin/mvn clean package"
 }
-
+/*
 stage("Nexus"){
 sh "${mavenHome}/bin/mvn deploy"
 }
@@ -20,4 +20,5 @@ stage("DeployToTomcatSserver"){
     sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@15.207.51.253:/opt/apache-tomcat-9.0.63/webapps/"
 }
 }
+*/
 }
